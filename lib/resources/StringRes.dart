@@ -1,3 +1,3 @@
 class StringRes {
-  static const title = 'Workshop';
+  static const profileTitle = 'My Photos';
 }
