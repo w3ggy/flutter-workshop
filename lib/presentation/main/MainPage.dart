@@ -11,6 +11,14 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  List<PostItem> items = List();
+
+  @override
+  void initState() {
+    super.initState();
+    items.addAll(_getMockItems());
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       primary: false,
@@ -18,7 +26,7 @@ class _MainPageState extends State<MainPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             _getHeader(context),
-            _getBody(_getMockItems()),
+            _getBody(),
             _getFooter(),
           ]),
     );
@@ -36,26 +44,16 @@ class _MainPageState extends State<MainPage> {
       ),
       child: SafeArea(
         bottom: false,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Image.asset(
-              ImageRes.icCamera,
-              color: ColorRes.white,
-            ),
-            Image.asset(
-              ImageRes.workshop,
-            ),
-            Image.asset(
-              ImageRes.icRefresh,
-            ),
-          ],
+        child: Center(
+          child: Image.asset(
+            ImageRes.workshop,
+          ),
         ),
       ),
     );
   }
 
-  Widget _getBody(List<PostItem> items) {
+  Widget _getBody() {
     return Flexible(
       child: ListView.separated(
         padding: EdgeInsets.all(0),
@@ -99,18 +97,18 @@ class _MainPageState extends State<MainPage> {
       PostItem(
         profileName: 'annileras',
         avatarUrl:
-        'https://cdn.zeplin.io/5ccffadfbaa9bd34a21c90b5/assets/01E3C2AE-8E06-48E8-A3CA-644729649CDE.png',
+            'https://cdn.zeplin.io/5ccffadfbaa9bd34a21c90b5/assets/01E3C2AE-8E06-48E8-A3CA-644729649CDE.png',
         imageUrl:
-        'https://cdn.zeplin.io/5ccffadfbaa9bd34a21c90b5/assets/A663BE71-D3DD-4C62-AAE0-64198C457A86.png',
+            'https://cdn.zeplin.io/5ccffadfbaa9bd34a21c90b5/assets/A663BE71-D3DD-4C62-AAE0-64198C457A86.png',
         liked: true,
         likeCount: 128,
       ),
       PostItem(
         profileName: 'alexschmit',
         avatarUrl:
-        'https://cdn.zeplin.io/5ccffadfbaa9bd34a21c90b5/assets/01E3C2AE-8E06-48E8-A3CA-644729649CDE.png',
+            'https://cdn.zeplin.io/5ccffadfbaa9bd34a21c90b5/assets/01E3C2AE-8E06-48E8-A3CA-644729649CDE.png',
         imageUrl:
-        'https://cdn.zeplin.io/5ccffadfbaa9bd34a21c90b5/assets/A663BE71-D3DD-4C62-AAE0-64198C457A86.png',
+            'https://cdn.zeplin.io/5ccffadfbaa9bd34a21c90b5/assets/A663BE71-D3DD-4C62-AAE0-64198C457A86.png',
         liked: false,
         likeCount: 109,
       ),
@@ -144,6 +142,31 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
+  Widget _getItemImage(PostItem item) {
+    return GestureDetector(
+      onDoubleTap: () => _onLikeClicked(item, true),
+      child: Image.network(
+        item.imageUrl,
+        fit: BoxFit.contain,
+      ),
+    );
+  }
+
+  Widget _getItemFooter(PostItem item) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(10, 12, 0, 21),
+      child: Row(
+        children: <Widget>[
+          _getLikeImage(item),
+          Container(
+            margin: EdgeInsets.only(left: 10),
+            child: _getLikeCountLabel(item),
+          )
+        ],
+      ),
+    );
+  }
+
   Widget _getAvatar(PostItem item) {
     return Container(
       width: 38,
@@ -166,33 +189,14 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  Widget _getItemImage(PostItem item) {
-    return Image.network(
-      item.imageUrl,
-      fit: BoxFit.contain,
-    );
-  }
-
-  Widget _getItemFooter(PostItem item) {
-    return Container(
-      margin: EdgeInsets.fromLTRB(10, 12, 0, 21),
-      child: Row(
-        children: <Widget>[
-          _getLikeImage(item),
-          Container(
-            margin: EdgeInsets.only(left: 10),
-            child: _getLikeCountLabel(item),
-          )
-        ],
-      ),
-    );
-  }
-
   Widget _getLikeImage(PostItem item) {
-    return Image(
-      width: 24,
-      height: 24,
-      image: AssetImage(item.liked ? ImageRes.icLiked : ImageRes.icLike),
+    return GestureDetector(
+      onTap: () => _onLikeClicked(item, !item.liked),
+      child: Image(
+        width: 24,
+        height: 24,
+        image: AssetImage(item.liked ? ImageRes.icLiked : ImageRes.icLike),
+      ),
     );
   }
 
@@ -215,5 +219,14 @@ class _MainPageState extends State<MainPage> {
       margin: EdgeInsets.fromLTRB(10, 0, 10, 12),
       color: ColorRes.darkIndigo5,
     );
+  }
+
+  _onLikeClicked(PostItem item, bool liked) {
+    final position = items.indexOf(item);
+    final updatedItem = item.copy(liked: liked);
+
+    setState(() {
+      items[position] = updatedItem;
+    });
   }
 }
