@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_workshop/models/PostItem.dart';
+import 'package:flutter_workshop/navigation/AppRouter.dart';
 import 'package:flutter_workshop/resources/ColorRes.dart';
 import 'package:flutter_workshop/resources/ImageRes.dart';
 
@@ -19,16 +20,21 @@ class _MainPageState extends State<MainPage> {
     items.addAll(_getMockItems());
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       primary: false,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(98),
+        child: _getHeader(context),
+      ),
       body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            _getHeader(context),
-            _getBody(),
-            _getFooter(),
-          ]),
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          _getBody(),
+        ],
+      ),
+      bottomNavigationBar: _getFooter(),
     );
   }
 
@@ -73,7 +79,7 @@ class _MainPageState extends State<MainPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Image.asset(
-            ImageRes.icHome,
+            ImageRes.icHomeFilled,
             width: 28,
             height: 28,
           ),
@@ -82,10 +88,13 @@ class _MainPageState extends State<MainPage> {
             width: 46,
             height: 46,
           ),
-          Image.asset(
-            ImageRes.icProfile,
-            width: 28,
-            height: 28,
+          GestureDetector(
+            onTap: () => appRouter.openProfileScreen(context),
+            child: Image.asset(
+              ImageRes.icProfile,
+              width: 28,
+              height: 28,
+            ),
           ),
         ],
       ),
