@@ -4,6 +4,7 @@ import 'package:flutter_workshop/navigation/AppRouter.dart';
 import 'package:flutter_workshop/resources/ColorRes.dart';
 import 'package:flutter_workshop/resources/ImageRes.dart';
 import 'package:flutter_workshop/resources/StringRes.dart';
+import 'package:flutter_workshop/widgets/FooterWidget.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -35,7 +36,7 @@ class ProfilePageState extends State<ProfilePage> {
           _getBody(),
         ],
       ),
-      bottomNavigationBar: _getFooter(),
+      bottomNavigationBar: FooterWidget(),
     );
   }
 
@@ -74,37 +75,6 @@ class ProfilePageState extends State<ProfilePage> {
       itemBuilder: (context, i) => _createListItem(items[i]),
       itemCount: items.length,
     ));
-  }
-
-  Widget _getFooter() {
-    return Container(
-      height: 100,
-      padding: EdgeInsets.symmetric(horizontal: 40),
-      color: ColorRes.darkIndigo,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          GestureDetector(
-            onTap: () => appRouter.openMainScreen(context),
-            child: Image.asset(
-              ImageRes.icHome,
-              width: 28,
-              height: 28,
-            ),
-          ),
-          Image.asset(
-            ImageRes.icAdd,
-            width: 46,
-            height: 46,
-          ),
-          Image.asset(
-            ImageRes.icProfileFilled,
-            width: 28,
-            height: 28,
-          ),
-        ],
-      ),
-    );
   }
 
   List<PhotoItem> _getMockItems() {
