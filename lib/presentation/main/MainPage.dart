@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_workshop/models/PostItem.dart';
-import 'package:flutter_workshop/navigation/AppRouter.dart';
 import 'package:flutter_workshop/resources/ColorRes.dart';
 import 'package:flutter_workshop/resources/ImageRes.dart';
 import 'package:flutter_workshop/widgets/FooterWidget.dart';
@@ -200,9 +199,10 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  _onLikeClicked(PostItem item, bool liked) {
+  void _onLikeClicked(PostItem item, bool liked) {
     final position = items.indexOf(item);
-    final updatedItem = item.copy(liked: liked);
+    final likeCount = liked ? item.likeCount + 1 : item.likeCount - 1;
+    final updatedItem = item.copy(liked: liked, likeCount: likeCount);
 
     setState(() {
       items[position] = updatedItem;
