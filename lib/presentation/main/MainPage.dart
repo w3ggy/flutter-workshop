@@ -121,11 +121,17 @@ class _MainPageState extends State<MainPage> {
   }
 
   Widget _getItemImage(PostItem item) {
-    return GestureDetector(
-      onDoubleTap: () => _onLikeClicked(item, true),
-      child: Image.network(
-        item.imageUrl,
-        fit: BoxFit.contain,
+    return AspectRatio(
+      aspectRatio: 1,
+      child: Container(
+        color: ColorRes.veryLightPink,
+        child: GestureDetector(
+          onDoubleTap: () => _onLikeClicked(item, true),
+          child: Image.network(
+            item.imageUrl,
+            fit: BoxFit.cover,
+          ),
+        ),
       ),
     );
   }

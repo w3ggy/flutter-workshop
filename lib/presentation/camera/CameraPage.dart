@@ -8,6 +8,7 @@ import 'package:flutter_workshop/resources/ColorRes.dart';
 import 'package:flutter_workshop/resources/ImageRes.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 class CameraPage extends StatefulWidget {
   @override
@@ -246,6 +247,8 @@ class CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
 
   void _handleImage(File image) {
     //todo: implement logic with handling image
-    appRouter.openMainScreen(context);
+    if (croppedFile != null) {
+      appRouter.openMainScreen(context);
+    }
   }
 }
