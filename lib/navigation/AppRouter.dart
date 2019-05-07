@@ -21,9 +21,8 @@ class AppRouter {
   }
 
   void openCameraScreen(BuildContext context) {
-    Navigator.pushAndRemoveUntil(
+    Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => CameraPage()),
-        (Route<dynamic> route) => false);
+        MaterialPageRoute(builder: (context) => CameraPage()));
   }
 }
