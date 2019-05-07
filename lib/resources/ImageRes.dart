@@ -8,6 +8,8 @@ class ImageRes {
   static const String icHomeFilled = 'assets/images/ic_home_filled.png';
   static const String icLike = 'assets/images/ic_like.png';
   static const String icLiked = 'assets/images/ic_liked.png';
+  static const String icShot = 'assets/images/ic_shot.png';
+  static const String icGallery = 'assets/images/ic_gallery.png';
 
   static const String workshop = 'assets/images/workshop.png';
 }

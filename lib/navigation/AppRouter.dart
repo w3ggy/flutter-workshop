@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_workshop/presentation/camera/CameraPage.dart';
 import 'package:flutter_workshop/presentation/main/MainPage.dart';
 import 'package:flutter_workshop/presentation/profile/ProfilePage.dart';
 
@@ -17,5 +18,11 @@ class AppRouter {
         context,
         MaterialPageRoute(builder: (context) => ProfilePage()),
         (Route<dynamic> route) => false);
+  }
+
+  void openCameraScreen(BuildContext context) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => CameraPage()));
   }
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_workshop/models/PostItem.dart';
-import 'package:flutter_workshop/navigation/AppRouter.dart';
 import 'package:flutter_workshop/resources/ColorRes.dart';
 import 'package:flutter_workshop/resources/ImageRes.dart';
+import 'package:flutter_workshop/widgets/FooterWidget.dart';
 
 class MainPage extends StatefulWidget {
   MainPage({Key key}) : super(key: key);
@@ -34,7 +34,7 @@ class _MainPageState extends State<MainPage> {
           _getBody(),
         ],
       ),
-      bottomNavigationBar: _getFooter(),
+      bottomNavigationBar: FooterWidget(),
     );
   }
 
@@ -66,37 +66,6 @@ class _MainPageState extends State<MainPage> {
         itemCount: items.length,
         itemBuilder: (context, i) => _getListItem(context, items[i]),
         separatorBuilder: (context, i) => _getDivider(),
-      ),
-    );
-  }
-
-  Widget _getFooter() {
-    return Container(
-      height: 100,
-      padding: EdgeInsets.symmetric(horizontal: 40),
-      color: ColorRes.darkIndigo,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Image.asset(
-            ImageRes.icHomeFilled,
-            width: 28,
-            height: 28,
-          ),
-          Image.asset(
-            ImageRes.icAdd,
-            width: 46,
-            height: 46,
-          ),
-          GestureDetector(
-            onTap: () => appRouter.openProfileScreen(context),
-            child: Image.asset(
-              ImageRes.icProfile,
-              width: 28,
-              height: 28,
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -152,11 +121,17 @@ class _MainPageState extends State<MainPage> {
   }
 
   Widget _getItemImage(PostItem item) {
-    return GestureDetector(
-      onDoubleTap: () => _onLikeClicked(item, true),
-      child: Image.network(
-        item.imageUrl,
-        fit: BoxFit.contain,
+    return AspectRatio(
+      aspectRatio: 1,
+      child: Container(
+        color: ColorRes.veryLightPink,
+        child: GestureDetector(
+          onDoubleTap: () => _onLikeClicked(item, true),
+          child: Image.network(
+            item.imageUrl,
+            fit: BoxFit.cover,
+          ),
+        ),
       ),
     );
   }
@@ -230,9 +205,10 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  _onLikeClicked(PostItem item, bool liked) {
+  void _onLikeClicked(PostItem item, bool liked) {
     final position = items.indexOf(item);
-    final updatedItem = item.copy(liked: liked);
+    final likeCount = liked ? item.likeCount + 1 : item.likeCount - 1;
+    final updatedItem = item.copy(liked: liked, likeCount: likeCount);
 
     setState(() {
       items[position] = updatedItem;
