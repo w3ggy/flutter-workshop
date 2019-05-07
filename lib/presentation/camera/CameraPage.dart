@@ -62,7 +62,7 @@ class CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
     }
   }
 
-  _getHeader(BuildContext context) {
+  Widget _getHeader(BuildContext context) {
     return Container(
       padding: EdgeInsets.fromLTRB(10, 10, 10, 14),
       decoration: BoxDecoration(
@@ -142,9 +142,9 @@ class CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
     if (controller == null || !controller.value.isInitialized) {
       return Center(
         child: Text(
-          'Initializing',
+          'Camera not initialized',
           style: TextStyle(
-            color: ColorRes.black,
+            color: ColorRes.white,
             fontSize: 24.0,
             fontWeight: FontWeight.w900,
           ),
@@ -245,7 +245,18 @@ class CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
     }
   }
 
-  void _handleImage(File image) {
+  Future<Null> _handleImage(File image) async {
+    File croppedFile = await ImageCropper.cropImage(
+      statusBarColor: ColorRes.midnight,
+      toolbarColor: ColorRes.darkIndigo,
+      toolbarWidgetColor: ColorRes.white,
+      sourcePath: image.path,
+      ratioX: 1.0,
+      ratioY: 1.0,
+      maxWidth: 512,
+      maxHeight: 512,
+    );
+
     //todo: implement logic with handling image
     if (croppedFile != null) {
       appRouter.openMainScreen(context);
