@@ -1,44 +1,67 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_workshop/navigation/AppRouter.dart';
 import 'package:flutter_workshop/resources/ColorRes.dart';
 import 'package:flutter_workshop/resources/ImageRes.dart';
 
 class FooterWidget extends StatelessWidget {
+  final OnItemSelected onItemSelected;
+  final int selectedIndex;
+
+  FooterWidget({@required this.onItemSelected, @required this.selectedIndex});
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100,
+      height: 50,
       padding: EdgeInsets.symmetric(horizontal: 40),
       color: ColorRes.darkIndigo,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          GestureDetector(
-            onTap: () => appRouter.openMainScreen(context),
-            child: Image.asset(
-              ImageRes.icHomeFilled,
-              width: 28,
-              height: 28,
-            ),
-          ),
-          GestureDetector(
-            onTap: () => appRouter.openCameraScreen(context),
-            child: Image.asset(
-              ImageRes.icAdd,
-              width: 46,
-              height: 46,
-            ),
-          ),
-          GestureDetector(
-            onTap: () => appRouter.openProfileScreen(context),
-            child: Image.asset(
-              ImageRes.icProfile,
-              width: 28,
-              height: 28,
-            ),
-          ),
-        ],
+        children: buildMenuItems(),
       ),
     );
   }
+
+  List<Widget> buildMenuItems() {
+    var menuItems = [
+      _MenuItem(
+        image: selectedIndex == 0 ? ImageRes.icHomeFilled : ImageRes.icHome,
+      ),
+      _MenuItem(
+        image: ImageRes.icAdd,
+        isLargeItem: true,
+      ),
+      _MenuItem(
+        image:
+            selectedIndex == 2 ? ImageRes.icProfileFilled : ImageRes.icProfile,
+      )
+    ];
+
+    return menuItems
+        .asMap()
+        .map((index, menuItem) => MapEntry(
+              index,
+              GestureDetector(
+                onTap: () => onItemSelected(index),
+                child: menuItem,
+              ),
+            ))
+        .values
+        .toList();
+  }
 }
+
+class _MenuItem extends StatelessWidget {
+  final String image;
+  final bool isLargeItem;
+
+  const _MenuItem({this.image, this.isLargeItem = false});
+
+  @override
+  Widget build(BuildContext context) {
+    final double size = isLargeItem ? 28 : 20;
+
+    return Image.asset(image, width: size, height: size);
+  }
+}
+
+typedef OnItemSelected = void Function(int index);

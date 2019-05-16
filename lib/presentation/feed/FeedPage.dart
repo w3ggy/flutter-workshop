@@ -3,16 +3,15 @@ import 'package:flutter_workshop/models/PostItem.dart';
 import 'package:flutter_workshop/presentation/ui_components/WorkshopAppBar.dart';
 import 'package:flutter_workshop/resources/ColorRes.dart';
 import 'package:flutter_workshop/resources/ImageRes.dart';
-import 'package:flutter_workshop/widgets/FooterWidget.dart';
 
-class MainPage extends StatefulWidget {
-  MainPage({Key key}) : super(key: key);
+class FeedPage extends StatefulWidget {
+  FeedPage({Key key}) : super(key: key);
 
   @override
-  _MainPageState createState() => _MainPageState();
+  _FeedPageState createState() => _FeedPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _FeedPageState extends State<FeedPage> {
   List<PostItem> items = List();
 
   @override
@@ -27,7 +26,6 @@ class _MainPageState extends State<MainPage> {
       primary: false,
       appBar: buildHeader(context),
       body: buildBody(),
-      bottomNavigationBar: FooterWidget(),
     );
   }
 

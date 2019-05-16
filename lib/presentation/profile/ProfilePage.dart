@@ -3,7 +3,6 @@ import 'package:flutter_workshop/models/PhotoItem.dart';
 import 'package:flutter_workshop/presentation/ui_components/WorkshopAppBar.dart';
 import 'package:flutter_workshop/resources/ColorRes.dart';
 import 'package:flutter_workshop/resources/StringRes.dart';
-import 'package:flutter_workshop/widgets/FooterWidget.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -25,7 +24,6 @@ class ProfilePageState extends State<ProfilePage> {
       primary: false,
       appBar: buildHeader(),
       body: buildBody(),
-      bottomNavigationBar: FooterWidget(),
     );
   }
 
@@ -35,7 +33,7 @@ class ProfilePageState extends State<ProfilePage> {
         StringRes.profileTitle,
         style: TextStyle(
           color: ColorRes.white,
-          fontSize: 23,
+          fontSize: 15,
           fontWeight: FontWeight.w500,
         ),
       ),
