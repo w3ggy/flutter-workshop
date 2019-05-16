@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_workshop/presentation/camera/CameraPage.dart';
-import 'package:flutter_workshop/presentation/main/MainPage.dart';
+import 'package:flutter_workshop/presentation/feed/FeedPage.dart';
 import 'package:flutter_workshop/presentation/profile/ProfilePage.dart';
 
 AppRouter appRouter = AppRouter();
@@ -9,7 +9,7 @@ class AppRouter {
   void openMainScreen(BuildContext context) {
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => MainPage()),
+        MaterialPageRoute(builder: (context) => FeedPage()),
         (Route<dynamic> route) => false);
   }
 
@@ -22,7 +22,6 @@ class AppRouter {
 
   void openCameraScreen(BuildContext context) {
     Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => CameraPage()));
+        context, MaterialPageRoute(builder: (context) => CameraPage()));
   }
 }

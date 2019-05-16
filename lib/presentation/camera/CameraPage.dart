@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_workshop/navigation/AppRouter.dart';
+import 'package:flutter_workshop/presentation/ui_components/WorkshopAppBar.dart';
 import 'package:flutter_workshop/resources/ColorRes.dart';
 import 'package:flutter_workshop/resources/ImageRes.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,9 +13,7 @@ import 'package:image_cropper/image_cropper.dart';
 
 class CameraPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() {
-    return CameraPageState();
-  }
+  State<StatefulWidget> createState() => CameraPageState();
 }
 
 class CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
@@ -24,17 +23,9 @@ class CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return Scaffold(
       primary: false,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(98),
-        child: _getHeader(context),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          _getBody(),
-        ],
-      ),
-      bottomNavigationBar: _getFooter(),
+      appBar: buildHeader(context),
+      body: buildBody(),
+      bottomNavigationBar: buildFooter(),
     );
   }
 
@@ -53,43 +44,43 @@ class CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.inactive) {
-      controller?.dispose();
-    } else if (state == AppLifecycleState.resumed) {
-      if (controller != null) {
-        onNewCameraSelected(controller.description);
-      }
+    switch (state) {
+      case AppLifecycleState.inactive:
+        controller?.dispose();
+        break;
+
+      case AppLifecycleState.resumed:
+        if (controller != null) {
+          onNewCameraSelected(controller.description);
+        }
+        break;
+
+      default:
+        break;
     }
   }
 
-  Widget _getHeader(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(10, 10, 10, 14),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [ColorRes.midnight, ColorRes.darkIndigo],
-        ),
-      ),
-      child: SafeArea(
-        bottom: false,
-        child: Center(
-          child: Image.asset(
-            ImageRes.workshop,
+  Widget buildHeader(BuildContext context) {
+    return WorkshopAppBar(
+      titleWidget: Image.asset(ImageRes.workshop),
+    );
+  }
+
+  Widget buildBody() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        Flexible(
+          child: Container(
+            color: ColorRes.black,
+            child: buildCameraPreviewWidget(),
           ),
         ),
-      ),
+      ],
     );
   }
 
-  Widget _getBody() {
-    return Flexible(
-      child: Container(color: ColorRes.black, child: _cameraPreviewWidget()),
-    );
-  }
-
-  Widget _getFooter() {
+  Widget buildFooter() {
     return Container(
       alignment: Alignment.center,
       height: 120,
@@ -102,47 +93,53 @@ class CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
       ),
       child: Row(
         children: <Widget>[
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                GestureDetector(
-                  onTap: getImage,
-                  child: Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(3),
-                      border: Border.all(color: ColorRes.lightPeriwinkle),
-                      image: DecorationImage(
-                        image: AssetImage(ImageRes.icGallery),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          GestureDetector(
-            onTap: () => _onTakePicturePressed(),
-            child: Image(
-              image: AssetImage(ImageRes.icShot),
-              width: 80,
-              height: 80,
-            ),
-          ),
-          Expanded(child: Container(),),
+          Expanded(child: buildGalleryButton()),
+          buildShotButton(),
+          Expanded(child: Container()),
         ],
       ),
     );
   }
 
-  Widget _cameraPreviewWidget() {
+  GestureDetector buildShotButton() {
+    return GestureDetector(
+      onTap: _onTakePicturePressed,
+      child: Image(
+        image: AssetImage(ImageRes.icShot),
+        width: 80,
+        height: 80,
+      ),
+    );
+  }
+
+  GestureDetector buildGalleryButton() {
+    return GestureDetector(
+      onTap: getImage,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(3),
+              border: Border.all(color: ColorRes.lightPeriwinkle),
+              image: DecorationImage(
+                image: AssetImage(ImageRes.icGallery),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildCameraPreviewWidget() {
     if (controller == null || !controller.value.isInitialized) {
       return Center(
         child: Text(
-          'Camera not initialized',
+          'Camera not available',
           style: TextStyle(
             color: ColorRes.white,
             fontSize: 24.0,
@@ -150,23 +147,27 @@ class CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
           ),
         ),
       );
-    } else {
-      return AspectRatio(
-        aspectRatio: controller.value.aspectRatio,
-        child: CameraPreview(controller),
-      );
     }
+
+    return AspectRatio(
+      aspectRatio: controller.value.aspectRatio,
+      child: CameraPreview(controller),
+    );
   }
 
   void onNewCameraSelected(CameraDescription cameraDescription) async {
     if (controller != null) {
       await controller.dispose();
     }
+
     controller = CameraController(cameraDescription, ResolutionPreset.high);
 
     // If the controller is updated then update the UI.
     controller.addListener(() {
-      if (mounted) setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
+
       if (controller.value.hasError) {
         showInSnackBar('Camera error ${controller.value.errorDescription}');
       }
@@ -195,10 +196,8 @@ class CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
 
   void _onTakePicturePressed() {
     takePicture().then((String filePath) {
-      if (mounted) {
-        if (filePath != null) {
-          _handleImage(File(filePath));
-        }
+      if (mounted && filePath != null) {
+        _handleImage(File(filePath));
       }
     });
   }
@@ -206,16 +205,19 @@ class CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
   Future<String> takePicture() async {
     if (!controller.value.isInitialized) {
       showInSnackBar('Error: select a camera first.');
+      return null;
     }
-    final Directory extDir = await getApplicationDocumentsDirectory();
-    final String dirPath = '${extDir.path}/Pictures/flutter_test';
-    await Directory(dirPath).create(recursive: true);
-    final String filePath = '$dirPath/${timestamp()}.jpg';
 
     if (controller.value.isTakingPicture) {
       // A capture is already pending, do nothing.
       return null;
     }
+
+    final Directory extDir = await getApplicationDocumentsDirectory();
+    final String dirPath = '${extDir.path}/Pictures/flutter_test';
+    final String filePath = '$dirPath/${timestamp()}.jpg';
+
+    await Directory(dirPath).create(recursive: true);
 
     try {
       await controller.takePicture(filePath);
@@ -223,14 +225,23 @@ class CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
       _showCameraException(e);
       return null;
     }
+
     return filePath;
   }
 
   Future<void> loadCameraDescription() async {
     try {
       List<CameraDescription> cameras = await availableCameras();
+
+      if (cameras.length == 0) {
+        print("[WARNING]: No cameras are available!");
+        return;
+      }
+
       final description = cameras.firstWhere(
-          (element) => element.lensDirection == CameraLensDirection.back);
+        (element) => element.lensDirection == CameraLensDirection.back,
+      );
+
       onNewCameraSelected(description);
     } on CameraException catch (e) {
       _showCameraException(e);
@@ -257,7 +268,7 @@ class CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
       maxHeight: 512,
     );
 
-    //todo: implement logic with handling image
+    // TODO: Implement logic with handling image
     if (croppedFile != null) {
       appRouter.openMainScreen(context);
     }

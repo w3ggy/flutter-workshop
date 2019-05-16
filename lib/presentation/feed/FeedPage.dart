@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_workshop/models/PostItem.dart';
+import 'package:flutter_workshop/presentation/ui_components/WorkshopAppBar.dart';
 import 'package:flutter_workshop/resources/ColorRes.dart';
 import 'package:flutter_workshop/resources/ImageRes.dart';
 import 'package:flutter_workshop/widgets/FooterWidget.dart';
@@ -24,49 +25,33 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       primary: false,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(98),
-        child: _getHeader(context),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          _getBody(),
-        ],
-      ),
+      appBar: buildHeader(context),
+      body: buildBody(),
       bottomNavigationBar: FooterWidget(),
     );
   }
 
-  _getHeader(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(10, 10, 10, 14),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [ColorRes.midnight, ColorRes.darkIndigo],
-        ),
-      ),
-      child: SafeArea(
-        bottom: false,
-        child: Center(
-          child: Image.asset(
-            ImageRes.workshop,
-          ),
-        ),
+  Widget buildHeader(BuildContext context) {
+    return WorkshopAppBar(
+      titleWidget: Center(
+        child: Image.asset(ImageRes.workshop),
       ),
     );
   }
 
-  Widget _getBody() {
-    return Flexible(
-      child: ListView.separated(
-        padding: EdgeInsets.all(0),
-        itemCount: items.length,
-        itemBuilder: (context, i) => _getListItem(context, items[i]),
-        separatorBuilder: (context, i) => _getDivider(),
-      ),
+  Widget buildBody() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        Flexible(
+          child: ListView.separated(
+            padding: EdgeInsets.all(0),
+            itemCount: items.length,
+            itemBuilder: (context, i) => buildListItem(context, items[i]),
+            separatorBuilder: (context, i) => buildDivider(),
+          ),
+        ),
+      ],
     );
   }
 
@@ -93,34 +78,31 @@ class _MainPageState extends State<MainPage> {
     ];
   }
 
-  Widget _getListItem(BuildContext context, PostItem item) {
+  Widget buildListItem(BuildContext context, PostItem item) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        _getItemHeader(item),
-        _getItemImage(item),
-        _getItemFooter(item),
+        buildItemHeader(item),
+        buildItemImage(item),
+        buildItemFooter(item),
       ],
     );
   }
 
-  Widget _getItemHeader(PostItem item) {
+  Widget buildItemHeader(PostItem item) {
     return Container(
       margin: EdgeInsets.fromLTRB(10, 6, 10, 6),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          _getAvatar(item),
-          Container(
-            margin: EdgeInsets.fromLTRB(10, 0, 0, 2),
-            child: _getUserName(item),
-          )
+          buildAvatar(item),
+          buildUserName(item),
         ],
       ),
     );
   }
 
-  Widget _getItemImage(PostItem item) {
+  Widget buildItemImage(PostItem item) {
     return AspectRatio(
       aspectRatio: 1,
       child: Container(
@@ -136,22 +118,19 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  Widget _getItemFooter(PostItem item) {
+  Widget buildItemFooter(PostItem item) {
     return Container(
       margin: EdgeInsets.fromLTRB(10, 12, 0, 21),
       child: Row(
         children: <Widget>[
-          _getLikeImage(item),
-          Container(
-            margin: EdgeInsets.only(left: 10),
-            child: _getLikeCountLabel(item),
-          )
+          buildLikeButton(item),
+          buildLikeCountLabel(item),
         ],
       ),
     );
   }
 
-  Widget _getAvatar(PostItem item) {
+  Widget buildAvatar(PostItem item) {
     return Container(
       width: 38,
       height: 38,
@@ -166,14 +145,17 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  Widget _getUserName(PostItem item) {
-    return Text(
-      item.profileName,
-      style: TextStyle(color: ColorRes.darkIndigo, fontSize: 15),
+  Widget buildUserName(PostItem item) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(10, 0, 0, 2),
+      child: Text(
+        item.profileName,
+        style: TextStyle(color: ColorRes.darkIndigo, fontSize: 15),
+      ),
     );
   }
 
-  Widget _getLikeImage(PostItem item) {
+  Widget buildLikeButton(PostItem item) {
     return GestureDetector(
       onTap: () => _onLikeClicked(item, !item.liked),
       child: Image(
@@ -184,20 +166,24 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  Widget _getLikeCountLabel(PostItem item) {
+  Widget buildLikeCountLabel(PostItem item) {
     final like = item.likeCount == 1 ? 'like' : 'likes';
     final label = '${item.likeCount} $like';
-    return Text(
-      label,
-      style: TextStyle(
-        color: ColorRes.darkIndigo,
-        fontSize: 19,
-        fontWeight: FontWeight.bold,
+
+    return Container(
+      margin: EdgeInsets.only(left: 10),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: ColorRes.darkIndigo,
+          fontSize: 19,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
 
-  Widget _getDivider() {
+  Widget buildDivider() {
     return Container(
       height: 1,
       margin: EdgeInsets.fromLTRB(10, 0, 10, 12),

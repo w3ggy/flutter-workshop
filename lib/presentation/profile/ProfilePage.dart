@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_workshop/models/PhotoItem.dart';
-import 'package:flutter_workshop/navigation/AppRouter.dart';
+import 'package:flutter_workshop/presentation/ui_components/WorkshopAppBar.dart';
 import 'package:flutter_workshop/resources/ColorRes.dart';
-import 'package:flutter_workshop/resources/ImageRes.dart';
 import 'package:flutter_workshop/resources/StringRes.dart';
 import 'package:flutter_workshop/widgets/FooterWidget.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() {
-    return ProfilePageState();
-  }
+  State<StatefulWidget> createState() => ProfilePageState();
 }
 
 class ProfilePageState extends State<ProfilePage> {
@@ -26,55 +23,43 @@ class ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       primary: false,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(98),
-        child: _getHeader(),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          _getBody(),
-        ],
-      ),
+      appBar: buildHeader(),
+      body: buildBody(),
       bottomNavigationBar: FooterWidget(),
     );
   }
 
-  Widget _getHeader() {
-    return Container(
-      padding: EdgeInsets.fromLTRB(10, 10, 10, 14),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [ColorRes.midnight, ColorRes.darkIndigo],
-        ),
-      ),
-      child: SafeArea(
-        bottom: false,
-        child: Center(
-          child: Text(
-            StringRes.profileTitle,
-            style: TextStyle(
-              color: ColorRes.white,
-              fontSize: 23,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
+  Widget buildHeader() {
+    return WorkshopAppBar(
+      titleWidget: Text(
+        StringRes.profileTitle,
+        style: TextStyle(
+          color: ColorRes.white,
+          fontSize: 23,
+          fontWeight: FontWeight.w500,
         ),
       ),
     );
   }
 
-  Widget _getBody() {
-    return Flexible(
-        child: GridView.builder(
-      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 7),
-      gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3, mainAxisSpacing: 6, crossAxisSpacing: 7),
-      itemBuilder: (context, i) => _createListItem(items[i]),
-      itemCount: items.length,
-    ));
+  Widget buildBody() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        Flexible(
+          child: GridView.builder(
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 7),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              mainAxisSpacing: 6,
+              crossAxisSpacing: 7,
+            ),
+            itemBuilder: (context, i) => buildListItem(items[i]),
+            itemCount: items.length,
+          ),
+        ),
+      ],
+    );
   }
 
   List<PhotoItem> _getMockItems() {
@@ -127,7 +112,7 @@ class ProfilePageState extends State<ProfilePage> {
     ];
   }
 
-  Widget _createListItem(PhotoItem item) {
+  Widget buildListItem(PhotoItem item) {
     return Image.network(item.imageUrl);
   }
 }
