@@ -11,19 +11,40 @@ class FeedPage extends StatefulWidget {
   _FeedPageState createState() => _FeedPageState();
 }
 
-class _FeedPageState extends State<FeedPage> {
+class _FeedPageState extends State<FeedPage>
+    with SingleTickerProviderStateMixin {
   List<PostItem> items = List();
+  Animation<double> animation;
+  AnimationController animationController;
 
   @override
   void initState() {
     super.initState();
+    animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 250));
+    animation = TweenSequence(
+      <TweenSequenceItem<double>>[
+        TweenSequenceItem<double>(
+          tween: Tween<double>(begin: 0.0, end: 1.0)
+              .chain(CurveTween(curve: Curves.linear)),
+          weight: 50.0,
+        ),
+        TweenSequenceItem<double>(
+          tween: Tween<double>(begin: 1.0, end: 0.0)
+              .chain(CurveTween(curve: Curves.linear)),
+          weight: 50.0,
+        ),
+      ],
+    ).animate(animationController)
+      ..addListener(() {
+        this.setState(() {});
+      });
     items.addAll(_getMockItems());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      primary: false,
       appBar: buildHeader(context),
       body: buildBody(),
     );
@@ -101,15 +122,33 @@ class _FeedPageState extends State<FeedPage> {
   }
 
   Widget buildItemImage(PostItem item) {
+    final likeSize = MediaQuery.of(context).size.width / 2;
     return AspectRatio(
       aspectRatio: 1,
       child: Container(
         color: ColorRes.veryLightPink,
         child: GestureDetector(
-          onDoubleTap: () => _onLikeClicked(item, true),
-          child: Image.network(
-            item.imageUrl,
-            fit: BoxFit.cover,
+          onDoubleTap: () {
+            animationController.reset();
+            animationController.forward();
+            _onLikeClicked(item, true);
+          },
+          child: Stack(
+            fit: StackFit.expand,
+            children: <Widget>[
+              Image.network(
+                item.imageUrl,
+                fit: BoxFit.cover,
+              ),
+              Opacity(
+                opacity: animation.value,
+                child: Icon(
+                  Icons.favorite,
+                  color: ColorRes.white,
+                  size: likeSize,
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -167,7 +206,6 @@ class _FeedPageState extends State<FeedPage> {
   Widget buildLikeCountLabel(PostItem item) {
     final like = item.likeCount == 1 ? 'like' : 'likes';
     final label = '${item.likeCount} $like';
-
     return Container(
       margin: EdgeInsets.only(left: 10),
       child: Text(
@@ -193,7 +231,6 @@ class _FeedPageState extends State<FeedPage> {
     final position = items.indexOf(item);
     final likeCount = liked ? item.likeCount + 1 : item.likeCount - 1;
     final updatedItem = item.copy(liked: liked, likeCount: likeCount);
-
     setState(() {
       items[position] = updatedItem;
     });

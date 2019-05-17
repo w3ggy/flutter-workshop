@@ -11,12 +11,13 @@ class FooterWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 50,
-      padding: EdgeInsets.symmetric(horizontal: 40),
       color: ColorRes.darkIndigo,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: buildMenuItems(),
+      child: SafeArea(
+        top: false,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: buildMenuItems(),
+        ),
       ),
     );
   }
@@ -41,6 +42,7 @@ class FooterWidget extends StatelessWidget {
         .map((index, menuItem) => MapEntry(
               index,
               GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () => onItemSelected(index),
                 child: menuItem,
               ),
@@ -60,7 +62,10 @@ class _MenuItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final double size = isLargeItem ? 28 : 20;
 
-    return Image.asset(image, width: size, height: size);
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Image.asset(image, width: size, height: size),
+    );
   }
 }
 

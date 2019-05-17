@@ -7,7 +7,7 @@ void main() {
 
   runApp(
     MaterialApp(
-      home: MainPage(),
+      home: MainPage(GlobalKey<MainPageState>()),
     ),
   );
 }
