@@ -118,7 +118,7 @@ class _FeedPageState extends State<FeedPage> {
 
   Widget buildItemFooter(PostItem item) {
     return Container(
-      margin: EdgeInsets.fromLTRB(10, 12, 0, 21),
+      margin: EdgeInsets.fromLTRB(10, 12, 0, 18),
       child: Row(
         children: <Widget>[
           buildLikeButton(item),
@@ -130,8 +130,8 @@ class _FeedPageState extends State<FeedPage> {
 
   Widget buildAvatar(PostItem item) {
     return Container(
-      width: 38,
-      height: 38,
+      width: 34,
+      height: 34,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         image: DecorationImage(
@@ -148,7 +148,7 @@ class _FeedPageState extends State<FeedPage> {
       margin: EdgeInsets.fromLTRB(10, 0, 0, 2),
       child: Text(
         item.profileName,
-        style: TextStyle(color: ColorRes.darkIndigo, fontSize: 15),
+        style: TextStyle(color: ColorRes.darkIndigo, fontSize: 13),
       ),
     );
   }
@@ -157,8 +157,8 @@ class _FeedPageState extends State<FeedPage> {
     return GestureDetector(
       onTap: () => _onLikeClicked(item, !item.liked),
       child: Image(
-        width: 24,
-        height: 24,
+        width: 20,
+        height: 20,
         image: AssetImage(item.liked ? ImageRes.icLiked : ImageRes.icLike),
       ),
     );
@@ -174,7 +174,7 @@ class _FeedPageState extends State<FeedPage> {
         label,
         style: TextStyle(
           color: ColorRes.darkIndigo,
-          fontSize: 19,
+          fontSize: 14,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -184,7 +184,7 @@ class _FeedPageState extends State<FeedPage> {
   Widget buildDivider() {
     return Container(
       height: 1,
-      margin: EdgeInsets.fromLTRB(10, 0, 10, 12),
+      margin: EdgeInsets.fromLTRB(10, 0, 10, 6),
       color: ColorRes.darkIndigo5,
     );
   }
