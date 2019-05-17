@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_workshop/models/NewPost.dart';
 import 'package:flutter_workshop/models/PostItem.dart';
 import 'package:flutter_workshop/presentation/ui_components/WorkshopAppBar.dart';
 import 'package:flutter_workshop/resources/ColorRes.dart';
 import 'package:flutter_workshop/resources/ImageRes.dart';
+import 'package:flutter_workshop/services/PhotoServive.dart';
 
 class FeedPage extends StatefulWidget {
   FeedPage({Key key}) : super(key: key);
@@ -237,9 +239,11 @@ class _FeedPageState extends State<FeedPage>
       items[position] = updatedItem;
     });
 
-    Firestore.instance
-        .collection('books')
-        .document()
-        .setData({'title': 'title', 'author': 'author'});
+    PhotoService.instanse.createNewPost(NewPost(
+      imageUrl:
+          'https://cdn.zeplin.io/5ccffadfbaa9bd34a21c90b5/assets/A663BE71-D3DD-4C62-AAE0-64198C457A86.png',
+      userId: '8126r93hbsdlkf8fakljd',
+      createdAt: DateTime.now().toIso8601String(),
+    ));
   }
 }
