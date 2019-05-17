@@ -25,6 +25,7 @@ class CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
       primary: false,
       appBar: buildHeader(context),
       body: buildBody(),
+      bottomNavigationBar: buildFooter(),
     );
   }
 
