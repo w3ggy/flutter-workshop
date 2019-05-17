@@ -12,4 +12,5 @@ class ImageRes {
   static const String icGallery = 'assets/images/ic_gallery.png';
 
   static const String workshop = 'assets/images/workshop.png';
+  static const String flutter = 'assets/images/flutter-icon.png';
 }
