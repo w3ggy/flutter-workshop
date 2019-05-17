@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_workshop/navigation/AppRouter.dart';
+import 'package:flutter_workshop/presentation/main/MainPage.dart';
 import 'package:flutter_workshop/presentation/ui_components/WorkshopAppBar.dart';
 import 'package:flutter_workshop/resources/ColorRes.dart';
 import 'package:flutter_workshop/resources/ImageRes.dart';
@@ -12,6 +12,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:image_cropper/image_cropper.dart';
 
 class CameraPage extends StatefulWidget {
+  final GlobalKey<MainPageState> mainPageKey;
+
+  CameraPage(this.mainPageKey);
+
   @override
   State<StatefulWidget> createState() => CameraPageState();
 }
@@ -269,7 +273,7 @@ class CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
 
     // TODO: Implement logic with handling image
     if (croppedFile != null) {
-      appRouter.openFeedScreen(context);
+      widget.mainPageKey.currentState.openFeedPage();
     }
   }
 }
