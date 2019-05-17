@@ -35,6 +35,8 @@ samples, guidance on mobile development, and a full API reference.
 3. Advanced:
    - Add any animation;
    - Add any test;
+   - Build app with Codemagic;
+   - Get app executable file from Codemagic email letter;
 
 ## Presentations
 0. [Flutter Overview](https://bit.ly/flutter-overview);
