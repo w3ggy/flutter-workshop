@@ -2,6 +2,28 @@
 
 A Flutter Workshop project.
 
+## Presentations
+1. [Flutter Overview](https://bit.ly/flutter-overview)
+2. [Flutter Markup](https://bit.ly/flutter-markup)
+3. [Firebase](https://bit.ly/firebase-integration)
+4. [Flutter Advanced](https://bit.ly/flutter-advanced)
+
+## Main tasks
+1. Install infrastructure
+   - Install flutter SDK [here.](https://flutter.dev/docs/get-started/install)
+   - Add environment variable with path to flutter.
+     - [Windows link.](https://flutter.dev/docs/get-started/install/windows#update-your-path)
+     - [Mac link.](https://flutter.dev/docs/get-started/install/macos#update-your-path)
+   - Install Android Studio [here.](https://developer.android.com/studio)
+   - Configure Android Studio 
+     - [Windows link.](https://flutter.dev/docs/get-started/install/windows#android-setup)
+     - [Mac link.](https://flutter.dev/docs/get-started/install/macos#android-setup)
+   #### Only for Mac
+   - Install and configure XCode [here.](https://flutter.dev/docs/get-started/install/macos#install-xcode)
+   
+2. Clone/Fork [this](https://github.com/w3ggy/flutter-workshop) repo.
+3. Make each [presentation](README.md:5) tasks.
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
