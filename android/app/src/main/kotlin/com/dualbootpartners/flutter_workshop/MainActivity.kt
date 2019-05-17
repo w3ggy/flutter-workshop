@@ -1,4 +1,4 @@
-package com.dualbootpartners.flutter_workshop
+package com.dualbootpartners.flutterworkshop
 
 import android.os.Bundle
 

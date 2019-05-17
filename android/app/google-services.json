@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "844756838044",
+    "firebase_url": "https://flutter-workshop-a877d.firebaseio.com",
+    "project_id": "flutter-workshop-a877d",
+    "storage_bucket": "flutter-workshop-a877d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:844756838044:android:b0cbf7b225acd6c6",
+        "android_client_info": {
+          "package_name": "com.dualbootpartners.flutterworkshop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "844756838044-b0aud91hi7em58uoecb00j1julr397ep.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAj5YTFYoqzANREVK3Nii0iDEoV8wujqqg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "844756838044-b0aud91hi7em58uoecb00j1julr397ep.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "844756838044-ia5m41k4flhs4q610g9mh787kql37h7o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.dualboot.flutterworkshop"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
