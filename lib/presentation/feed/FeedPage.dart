@@ -23,7 +23,6 @@ class _FeedPageState extends State<FeedPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      primary: false,
       appBar: buildHeader(context),
       body: buildBody(),
     );

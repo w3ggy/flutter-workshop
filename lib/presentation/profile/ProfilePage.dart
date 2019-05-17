@@ -21,7 +21,6 @@ class ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      primary: false,
       appBar: buildHeader(),
       body: buildBody(),
     );
@@ -33,7 +32,7 @@ class ProfilePageState extends State<ProfilePage> {
         StringRes.profileTitle,
         style: TextStyle(
           color: ColorRes.white,
-          fontSize: 15,
+          fontSize: 23,
           fontWeight: FontWeight.w500,
         ),
       ),

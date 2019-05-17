@@ -22,7 +22,6 @@ class CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      primary: false,
       appBar: buildHeader(context),
       body: buildBody(),
       bottomNavigationBar: buildFooter(),
