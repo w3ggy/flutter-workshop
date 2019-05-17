@@ -269,7 +269,7 @@ class CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
 
     // TODO: Implement logic with handling image
     if (croppedFile != null) {
-      appRouter.openMainScreen(context);
+      appRouter.openFeedScreen(context);
     }
   }
 }
