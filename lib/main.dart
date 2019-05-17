@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_workshop/presentation/main/MainPage.dart';
 
 void main() {
-  configureSystemUi();
+  configureSystemUI();
 
   runApp(
     MaterialApp(
@@ -12,6 +12,6 @@ void main() {
   );
 }
 
-void configureSystemUi() {
+void configureSystemUI() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
 }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_workshop/models/PostItem.dart';
 import 'package:flutter_workshop/presentation/ui_components/WorkshopAppBar.dart';
@@ -231,8 +232,14 @@ class _FeedPageState extends State<FeedPage>
     final position = items.indexOf(item);
     final likeCount = liked ? item.likeCount + 1 : item.likeCount - 1;
     final updatedItem = item.copy(liked: liked, likeCount: likeCount);
+
     setState(() {
       items[position] = updatedItem;
     });
+
+    Firestore.instance
+        .collection('books')
+        .document()
+        .setData({'title': 'title', 'author': 'author'});
   }
 }

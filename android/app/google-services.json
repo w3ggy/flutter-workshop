@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "844756838044-dhr1c2cpvo811q2eo3jea1fher7srojg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dualbootpartners.flutterworkshop",
+            "certificate_hash": "c36bbeda85ea1749e3ef9292b8a13989cb4a7ada"
+          }
+        },
+        {
           "client_id": "844756838044-b0aud91hi7em58uoecb00j1julr397ep.apps.googleusercontent.com",
           "client_type": 3
         }
