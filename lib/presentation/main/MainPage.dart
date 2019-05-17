@@ -2,10 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_workshop/presentation/camera/CameraPage.dart';
 import 'package:flutter_workshop/presentation/feed/FeedPage.dart';
 import 'package:flutter_workshop/presentation/profile/ProfilePage.dart';
+import 'package:flutter_workshop/services/Authentication.dart';
 import 'package:flutter_workshop/widgets/FooterWidget.dart';
 
 class MainPage extends StatefulWidget {
-  MainPage(Key key) : super(key: key);
+  MainPage({Key key, this.auth, this.userId, this.onSignedOut})
+      : super(key: key);
+
+  final BaseAuth auth;
+  final VoidCallback onSignedOut;
+  final String userId;
 
   @override
   MainPageState createState() => MainPageState();
