@@ -2,11 +2,16 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_workshop/models/NewPost.dart';
 import 'package:flutter_workshop/presentation/main/MainPage.dart';
+import 'package:flutter_workshop/presentation/ui_components/Alerts.dart';
+import 'package:flutter_workshop/presentation/ui_components/LoadableWidget.dart';
 import 'package:flutter_workshop/presentation/ui_components/WorkshopAppBar.dart';
 import 'package:flutter_workshop/resources/ColorRes.dart';
 import 'package:flutter_workshop/resources/ImageRes.dart';
+import 'package:flutter_workshop/services/PhotoService.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -22,13 +27,18 @@ class CameraPage extends StatefulWidget {
 
 class CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
   CameraController controller;
+  bool isPhotoUploading = false;
+  UploadPhotoTask currentTask;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: buildHeader(context),
-      body: buildBody(),
-      bottomNavigationBar: buildFooter(),
+    return LoadableWidget(
+      loading: isPhotoUploading,
+      child: Scaffold(
+        appBar: buildHeader(context),
+        body: buildBody(),
+        bottomNavigationBar: buildFooter(),
+      ),
     );
   }
 
@@ -271,9 +281,32 @@ class CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
       maxHeight: 512,
     );
 
-    // TODO: Implement logic with handling image
     if (croppedFile != null) {
-      widget.mainPageKey.currentState.openFeedPage();
+      setState(() {
+        isPhotoUploading = true;
+      });
+
+      currentTask?.task?.cancel();
+
+      currentTask = PhotoService.instanse.uploadPhoto(croppedFile);
+
+      currentTask.task.onComplete.then((result) {
+        setState(() {
+          isPhotoUploading = false;
+        });
+
+        if (result.error != null) {
+          showOperationFailedAlert(context, retry: () => _handleImage(image));
+        } else {
+          PhotoService.instanse.createNewPost(NewPost(
+            imageUrl: currentTask.fileName,
+            createdAt: DateTime.now().toIso8601String(),
+            userId: 'default user',
+          ));
+
+          widget.mainPageKey.currentState.openFeedPage();
+        }
+      });
     }
   }
 }
