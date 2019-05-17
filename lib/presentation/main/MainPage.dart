@@ -5,16 +5,18 @@ import 'package:flutter_workshop/presentation/profile/ProfilePage.dart';
 import 'package:flutter_workshop/widgets/FooterWidget.dart';
 
 class MainPage extends StatefulWidget {
+  MainPage(Key key) : super(key: key);
+
   @override
-  _MainPageState createState() => _MainPageState();
+  MainPageState createState() => MainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class MainPageState extends State<MainPage> {
   var currentIndex = 0;
 
-  final List<RenderFunction> renderPage = [
+  List<RenderFunction> get renderPage => [
     () => FeedPage(),
-    () => CameraPage(),
+    () => CameraPage(widget.key),
     () => ProfilePage(),
   ];
 
@@ -29,6 +31,12 @@ class _MainPageState extends State<MainPage> {
         ),
       ],
     );
+  }
+
+  void openFeedPage() {
+    setState(() {
+      currentIndex = 0;
+    });
   }
 }
 
