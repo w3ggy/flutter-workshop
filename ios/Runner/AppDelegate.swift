@@ -13,7 +13,7 @@ import Firebase
     if FirebaseApp.app() == nil {
         FirebaseApp.configure()
     }
-    
+
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }

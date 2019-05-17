@@ -25,7 +25,7 @@ class PhotoService {
   }
 
   UploadPhotoTask uploadPhoto(File photo) {
-    final fileName = _uuid.v4() + '.' + extension(photo.path);
+    final fileName = _uuid.v4() + extension(photo.path);
     final StorageReference ref = _storage.ref().child('photos').child(fileName);
     final StorageUploadTask uploadTask = ref.putFile(photo);
 
