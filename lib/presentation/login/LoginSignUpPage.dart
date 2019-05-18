@@ -69,7 +69,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
           userId = await widget.auth.signIn(_email, _password);
           print('Signed in: $userId');
         } else {
-          userId = await widget.auth.signUp(_name, '', _email, _password);
+          userId = await widget.auth.signUp(_name, _photoUrl, _email, _password);
           print('Signed up user: $userId');
           userId = await widget.auth.signIn(_email, _password);
           print('Signed in: $userId');
