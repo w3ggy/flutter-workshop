@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_workshop/models/PostItem.dart';
 import 'package:flutter_workshop/presentation/feed/PostItemWidget.dart';
@@ -16,12 +18,13 @@ class FeedPage extends StatefulWidget {
 class _FeedPageState extends State<FeedPage>
     with SingleTickerProviderStateMixin {
   List<PostItem> items = List();
+  StreamSubscription subscription;
 
   @override
   void initState() {
     super.initState();
 
-    PhotoService.instanse.getPhotoFeedPosts().listen((posts) {
+    subscription = PhotoService.instanse.getPhotoFeedPosts().listen((posts) {
       setState(() {
         items = posts;
       });
@@ -34,6 +37,13 @@ class _FeedPageState extends State<FeedPage>
       appBar: buildHeader(context),
       body: buildBody(),
     );
+  }
+
+
+  @override
+  void dispose() {
+    super.dispose();
+    subscription?.cancel();
   }
 
   Widget buildHeader(BuildContext context) {
