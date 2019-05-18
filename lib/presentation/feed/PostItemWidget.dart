@@ -4,21 +4,18 @@ import 'package:flutter_workshop/resources/ColorRes.dart';
 import 'package:flutter_workshop/resources/ImageRes.dart';
 
 class PostItemWidget extends StatefulWidget {
-  final PostItem data;
+  PostItem data;
 
   PostItemWidget({@required this.data, Key key}) : super(key: key);
 
   @override
-  _PostItemWidgetState createState() => _PostItemWidgetState(data);
+  _PostItemWidgetState createState() => _PostItemWidgetState();
 }
 
 class _PostItemWidgetState extends State<PostItemWidget>
     with SingleTickerProviderStateMixin {
   Animation<double> animation;
   AnimationController animationController;
-  PostItem data;
-
-  _PostItemWidgetState(this.data);
 
   @override
   void initState() {
@@ -45,9 +42,9 @@ class _PostItemWidgetState extends State<PostItemWidget>
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        buildItemHeader(data),
-        buildItemImage(data),
-        buildItemFooter(data),
+        buildItemHeader(widget.data),
+        buildItemImage(widget.data),
+        buildItemFooter(widget.data),
       ],
     );
   }
@@ -186,7 +183,7 @@ class _PostItemWidgetState extends State<PostItemWidget>
 
   void updateWidget(PostItem newData) {
     setState(() {
-      data = newData;
+      widget.data = newData;
     });
   }
 }
