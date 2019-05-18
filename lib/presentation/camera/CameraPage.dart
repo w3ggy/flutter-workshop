@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_workshop/models/NewPost.dart';
 import 'package:flutter_workshop/presentation/main/MainPage.dart';
@@ -301,7 +300,7 @@ class CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
           result.ref.getDownloadURL().then((url) {
             PhotoService.instanse.createNewPost(NewPost(
               imageUrl: url,
-              createdAt: DateTime.now().toIso8601String(),
+              createdAt: DateTime.now(),
               userId: 'default user',
             ));
           });

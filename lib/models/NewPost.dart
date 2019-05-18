@@ -3,7 +3,7 @@ import 'package:meta/meta.dart';
 class NewPost {
   final String imageUrl;
   final String userId;
-  final String createdAt;
+  final DateTime createdAt;
 
   NewPost({
     @required this.imageUrl,
@@ -15,7 +15,7 @@ class NewPost {
     return {
       'imageUrl': imageUrl,
       'userId': userId,
-      'createdAt': createdAt,
+      'createdAt': createdAt.millisecondsSinceEpoch,
     };
   }
 }
