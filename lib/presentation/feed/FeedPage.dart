@@ -39,7 +39,6 @@ class _FeedPageState extends State<FeedPage>
     );
   }
 
-
   @override
   void dispose() {
     super.dispose();
@@ -62,7 +61,7 @@ class _FeedPageState extends State<FeedPage>
           child: ListView.separated(
             padding: EdgeInsets.all(0),
             itemCount: items.length,
-            itemBuilder: (context, i) => buildListItem(context, items[i]),
+            itemBuilder: (context, i) => PostItemWidget(data: items[i]),
             separatorBuilder: (context, i) => buildDivider(),
           ),
         ),
@@ -76,9 +75,5 @@ class _FeedPageState extends State<FeedPage>
       margin: EdgeInsets.fromLTRB(10, 0, 10, 6),
       color: ColorRes.darkIndigo5,
     );
-  }
-
-  Widget buildListItem(BuildContext context, PostItem item) {
-    return PostItemWidget(data: item);
   }
 }
