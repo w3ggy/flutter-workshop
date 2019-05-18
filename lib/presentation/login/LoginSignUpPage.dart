@@ -1,8 +1,16 @@
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_workshop/presentation/ui_components/Alerts.dart';
+import 'package:flutter_workshop/presentation/ui_components/LoadableWidget.dart';
 import 'package:flutter_workshop/resources/ColorRes.dart';
 import 'package:flutter_workshop/resources/ImageRes.dart';
 import 'package:flutter_workshop/resources/StringRes.dart';
 import 'package:flutter_workshop/services/Authentication.dart';
+import 'package:flutter_workshop/services/PhotoService.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 
 class LoginSignUpPage extends StatefulWidget {
   LoginSignUpPage({this.auth, this.onSignedIn});
@@ -19,19 +27,29 @@ enum FormMode { LOGIN, SIGNUP }
 class _LoginSignUpPageState extends State<LoginSignUpPage> {
   final _formKey = GlobalKey<FormState>();
 
+  String _photoUrl;
+  String _name;
   String _email;
   String _password;
   String _errorMessage;
 
   FormMode _formMode = FormMode.LOGIN;
   bool _isLoading;
+  bool isPhotoUploading = false;
+  UploadPhotoTask currentTask;
 
   bool _validateAndSave() {
     final form = _formKey.currentState;
 
-    if (form.validate()) {
+    if (form.validate() && _photoUrl != null) {
       form.save();
       return true;
+    }
+
+    if (_photoUrl == null) {
+      setState(() {
+        _errorMessage = StringRes.emptyAvatar;
+      });
     }
 
     return false;
@@ -49,7 +67,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
           userId = await widget.auth.signIn(_email, _password);
           print('Signed in: $userId');
         } else {
-          userId = await widget.auth.signUp(_email, _password);
+          userId = await widget.auth.signUp(_name, '', _email, _password);
           print('Signed up user: $userId');
           userId = await widget.auth.signIn(_email, _password);
           print('Signed in: $userId');
@@ -99,7 +117,9 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return LoadableWidget(
+      loading: _isLoading,
+      child: Scaffold(
         appBar: AppBar(
           title: Text(StringRes.auth),
         ),
@@ -107,26 +127,18 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
           fit: StackFit.expand,
           children: <Widget>[
             _showBody(),
-            _showCircularProgress(),
           ],
-        ));
-  }
-
-  Widget _showCircularProgress() {
-    if (_isLoading) {
-      return Positioned.fill(
-        child: Container(
-          color: ColorRes.black20,
-          child: Center(
-            child: CircularProgressIndicator(),
+        ),
+        bottomNavigationBar: SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              _showPrimaryButton(),
+              _showSecondaryButton(),
+            ],
           ),
         ),
-      );
-    }
-
-    return Container(
-      height: 0.0,
-      width: 0.0,
+      ),
     );
   }
 
@@ -161,10 +173,9 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
             shrinkWrap: true,
             children: <Widget>[
               _showLogo(),
+              _showNameInput(),
               _showEmailInput(),
               _showPasswordInput(),
-              _showPrimaryButton(),
-              _showSecondaryButton(),
               _showErrorMessage(),
             ],
           ),
@@ -189,22 +200,57 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
   }
 
   Widget _showLogo() {
-    return Hero(
-      tag: 'hero',
-      child: Padding(
+    if (_formMode == FormMode.LOGIN) {
+      return Padding(
         padding: EdgeInsets.fromLTRB(0.0, 70.0, 0.0, 0.0),
         child: CircleAvatar(
           backgroundColor: Colors.transparent,
           radius: 48.0,
           child: Image.asset(ImageRes.flutter),
         ),
-      ),
-    );
+      );
+    } else {
+      return GestureDetector(
+        child: Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            Container(
+              width: 116,
+              height: 116,
+              decoration: BoxDecoration(
+                  color: ColorRes.darkIndigo5,
+                  shape: BoxShape.circle,
+                  image: _photoUrl == null
+                      ? null
+                      : DecorationImage(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(_photoUrl),
+                        ),
+                  border: Border.all(color: ColorRes.white, width: 2),
+                  boxShadow: [
+                    BoxShadow(
+                      color: ColorRes.black40,
+                      offset: Offset(0.0, 3),
+                      blurRadius: 6,
+                    ),
+                  ]),
+            ),
+            isPhotoUploading
+                ? CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
+                : Container()
+          ],
+        ),
+        onTap: _openChooseDialog,
+      );
+    }
   }
 
   Widget _showEmailInput() {
+    final double topPadding = _formMode == FormMode.SIGNUP ? 15 : 100;
+
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0.0, 100.0, 0.0, 0.0),
+      padding: EdgeInsets.fromLTRB(0.0, topPadding, 0.0, 0.0),
       child: TextFormField(
         maxLines: 1,
         keyboardType: TextInputType.emailAddress,
@@ -221,9 +267,33 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
     );
   }
 
+  Widget _showNameInput() {
+    if (_formMode != FormMode.SIGNUP) {
+      return Container();
+    }
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0.0, 70.0, 0.0, 0.0),
+      child: TextFormField(
+        maxLines: 1,
+        keyboardType: TextInputType.text,
+        textCapitalization: TextCapitalization.words,
+        autofocus: false,
+        decoration: InputDecoration(
+            hintText: StringRes.name,
+            icon: Icon(
+              Icons.person,
+              color: Colors.grey,
+            )),
+        validator: (value) => value.isEmpty ? StringRes.emptyName : null,
+        onSaved: (value) => _name = value,
+      ),
+    );
+  }
+
   Widget _showPasswordInput() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+      padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 20.0),
       child: TextFormField(
         maxLines: 1,
         obscureText: true,
@@ -272,4 +342,101 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
           ),
         ));
   }
+
+  void _openChooseDialog() async {
+    ImageSourceType type = await _showImageSourceDialog(context);
+    if (type != null) {
+      getImage(type);
+    }
+  }
+
+  Future<ImageSourceType> _showImageSourceDialog(BuildContext context) async {
+    return showDialog<ImageSourceType>(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: Text(StringRes.imageResource),
+            children: <Widget>[
+              SimpleDialogOption(
+                onPressed: () {
+                  Navigator.pop(context, ImageSourceType.CAMERA);
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                  child: Text(StringRes.camera),
+                ),
+              ),
+              SimpleDialogOption(
+                onPressed: () {
+                  Navigator.pop(context, ImageSourceType.GALLERY);
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                  child: Text(StringRes.gallery),
+                ),
+              ),
+            ],
+          );
+        });
+  }
+
+  Future getImage(ImageSourceType type) async {
+    ImageSource imageSource;
+
+    switch (type) {
+      case ImageSourceType.CAMERA:
+        imageSource = ImageSource.camera;
+        break;
+
+      case ImageSourceType.GALLERY:
+        imageSource = ImageSource.gallery;
+        break;
+    }
+
+    var image = await ImagePicker.pickImage(source: imageSource);
+    _cropImage(image);
+  }
+
+  Future<Null> _cropImage(File imageFile) async {
+    File croppedFile = await ImageCropper.cropImage(
+      sourcePath: imageFile.path,
+      toolbarColor: ColorRes.darkIndigo,
+      ratioX: 1.0,
+      ratioY: 1.0,
+      maxWidth: 512,
+      maxHeight: 512,
+    );
+
+    if (croppedFile != null) {
+      setState(() {
+        isPhotoUploading = true;
+      });
+
+      currentTask?.task?.cancel();
+
+      currentTask = PhotoService.instanse.uploadPhoto(croppedFile);
+
+      currentTask.task.onComplete.then((result) {
+        if (result.error != null) {
+          setState(() {
+            isPhotoUploading = false;
+          });
+          showOperationFailedAlert(context, retry: () => _cropImage(imageFile));
+        } else {
+          _getDownLoadUrl(result);
+        }
+      });
+    }
+  }
+
+  Future<void> _getDownLoadUrl(StorageTaskSnapshot result) async {
+    _photoUrl = await result.ref.getDownloadURL();
+
+    setState(() {
+      isPhotoUploading = false;
+    });
+  }
 }
+
+enum ImageSourceType { CAMERA, GALLERY }

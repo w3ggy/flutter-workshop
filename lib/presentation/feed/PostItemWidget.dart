@@ -4,7 +4,7 @@ import 'package:flutter_workshop/models/NewPost.dart';
 import 'package:flutter_workshop/models/PostItem.dart';
 import 'package:flutter_workshop/resources/ColorRes.dart';
 import 'package:flutter_workshop/resources/ImageRes.dart';
-import 'package:flutter_workshop/services/PhotoServive.dart';
+import 'package:flutter_workshop/services/PhotoService.dart';
 
 class PostItemWidget extends StatefulWidget {
   PostItem data;
