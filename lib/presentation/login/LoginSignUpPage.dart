@@ -41,12 +41,14 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
   bool _validateAndSave() {
     final form = _formKey.currentState;
 
-    if (form.validate() && _photoUrl != null) {
+    if (form.validate() &&
+        (_formMode == FormMode.LOGIN ||
+            _formMode == FormMode.SIGNUP && _photoUrl != null)) {
       form.save();
       return true;
     }
 
-    if (_photoUrl == null) {
+    if (_formMode == FormMode.SIGNUP && _photoUrl == null) {
       setState(() {
         _errorMessage = StringRes.emptyAvatar;
       });
