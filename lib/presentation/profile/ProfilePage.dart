@@ -44,16 +44,8 @@ class ProfilePageState extends State<ProfilePage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         Flexible(
-          child: GridView.builder(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 7),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              mainAxisSpacing: 6,
-              crossAxisSpacing: 7,
-            ),
-            itemBuilder: (context, i) => buildListItem(items[i]),
-            itemCount: items.length,
-          ),
+          //TODO: implement GridView
+          child: Container(color: Colors.purple,),
         ),
       ],
     );
@@ -79,9 +71,5 @@ class ProfilePageState extends State<ProfilePage> {
     ];
 
     return photoUrls.map((url) => PhotoItem(imageUrl: url)).toList();
-  }
-
-  Widget buildListItem(PhotoItem item) {
-    return Image.network(item.imageUrl);
   }
 }

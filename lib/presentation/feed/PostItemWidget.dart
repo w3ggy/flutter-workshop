@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_workshop/models/PostItem.dart';
-import 'package:flutter_workshop/resources/ColorRes.dart';
-import 'package:flutter_workshop/resources/ImageRes.dart';
 
 class PostItemWidget extends StatefulWidget {
   PostItem data;
@@ -12,31 +10,7 @@ class PostItemWidget extends StatefulWidget {
   _PostItemWidgetState createState() => _PostItemWidgetState();
 }
 
-class _PostItemWidgetState extends State<PostItemWidget>
-    with SingleTickerProviderStateMixin {
-  Animation<double> animation;
-  AnimationController animationController;
-
-  @override
-  void initState() {
-    super.initState();
-    animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 750));
-    animation = TweenSequence(
-      <TweenSequenceItem<double>>[
-        TweenSequenceItem<double>(
-          tween: Tween<double>(begin: 0.0, end: 1.0)
-              .chain(CurveTween(curve: Curves.easeIn)),
-          weight: 50.0,
-        ),
-        TweenSequenceItem<double>(
-          tween: Tween<double>(begin: 1.0, end: 0.0)
-              .chain(CurveTween(curve: Curves.easeOut)),
-          weight: 50.0,
-        ),
-      ],
-    ).animate(animationController);
-  }
+class _PostItemWidgetState extends State<PostItemWidget> {
 
   @override
   Widget build(BuildContext context) {
@@ -50,140 +24,28 @@ class _PostItemWidgetState extends State<PostItemWidget>
   }
 
   Widget buildItemHeader(PostItem item) {
+    //TODO: implement item header
     return Container(
-      margin: EdgeInsets.fromLTRB(10, 6, 10, 6),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          buildAvatar(item),
-          buildUserName(item),
-        ],
-      ),
+      height: 50,
+      color: Colors.yellow,
     );
   }
 
   Widget buildItemImage(PostItem item) {
-    final likeSize = MediaQuery.of(context).size.width / 2;
+    //TODO: implement item body
+
     return AspectRatio(
       aspectRatio: 1,
       child: Container(
-        color: ColorRes.veryLightPink,
-        child: GestureDetector(
-          onDoubleTap: () {
-            _onLikeClicked(item, true);
-          },
-          child: Stack(
-            fit: StackFit.expand,
-            children: <Widget>[
-              Image.network(
-                item.imageUrl,
-                fit: BoxFit.cover,
-              ),
-              ScaleTransition(
-                scale: animation,
-                child: Opacity(
-                  opacity: animation.value,
-                  child: Icon(
-                    Icons.favorite,
-                    color: ColorRes.white,
-                    size: likeSize,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+        color: Colors.green,
       ),
     );
   }
 
   Widget buildItemFooter(PostItem item) {
     return Container(
-      margin: EdgeInsets.fromLTRB(10, 12, 0, 18),
-      child: Row(
-        children: <Widget>[
-          buildLikeButton(item),
-          buildLikeCountLabel(item),
-        ],
-      ),
+      height: 50,
+      color: Colors.blue,
     );
-  }
-
-  Widget buildAvatar(PostItem item) {
-    return Container(
-      width: 34,
-      height: 34,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        image: DecorationImage(
-          fit: BoxFit.fill,
-          image: NetworkImage(item.avatarUrl),
-        ),
-        border: Border.all(color: ColorRes.veryLightPink, width: 1),
-      ),
-    );
-  }
-
-  Widget buildUserName(PostItem item) {
-    return Container(
-      margin: EdgeInsets.fromLTRB(10, 0, 0, 2),
-      child: Text(
-        item.profileName,
-        style: TextStyle(color: ColorRes.darkIndigo, fontSize: 13),
-      ),
-    );
-  }
-
-  Widget buildLikeButton(PostItem item) {
-    return GestureDetector(
-      onTap: () => _onLikeClicked(item, !item.liked),
-      child: Image(
-        width: 20,
-        height: 20,
-        image: AssetImage(item.liked ? ImageRes.icLiked : ImageRes.icLike),
-      ),
-    );
-  }
-
-  Widget buildLikeCountLabel(PostItem item) {
-    final like = item.likeCount == 1 ? 'like' : 'likes';
-    final label = '${item.likeCount} $like';
-    return Container(
-      margin: EdgeInsets.only(left: 10),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: ColorRes.darkIndigo,
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-
-  void _onLikeClicked(PostItem item, bool liked) {
-    final likeCount = liked ? item.likeCount + 1 : item.likeCount - 1;
-    final updatedItem = item.copy(liked: liked, likeCount: likeCount);
-
-    if (liked) {
-      animation.addListener(() {
-        updateWidget(updatedItem);
-      });
-
-      animationController.reset();
-      animationController.forward();
-
-      animation.removeListener(() {
-        updateWidget(updatedItem);
-      });
-    } else {
-      updateWidget(updatedItem);
-    }
-  }
-
-  void updateWidget(PostItem newData) {
-    setState(() {
-      widget.data = newData;
-    });
   }
 }
