@@ -298,11 +298,13 @@ class CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
         if (result.error != null) {
           showOperationFailedAlert(context, retry: () => _handleImage(image));
         } else {
-          PhotoService.instanse.createNewPost(NewPost(
-            imageUrl: currentTask.fileName,
-            createdAt: DateTime.now().toIso8601String(),
-            userId: 'default user',
-          ));
+          result.ref.getDownloadURL().then((url) {
+            PhotoService.instanse.createNewPost(NewPost(
+              imageUrl: url,
+              createdAt: DateTime.now().toIso8601String(),
+              userId: 'default user',
+            ));
+          });
 
           widget.mainPageKey.currentState.openFeedPage();
         }

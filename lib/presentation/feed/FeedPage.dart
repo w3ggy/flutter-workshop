@@ -4,7 +4,6 @@ import 'package:flutter_workshop/presentation/feed/PostItemWidget.dart';
 import 'package:flutter_workshop/presentation/ui_components/WorkshopAppBar.dart';
 import 'package:flutter_workshop/resources/ColorRes.dart';
 import 'package:flutter_workshop/resources/ImageRes.dart';
-import 'package:flutter_workshop/services/PhotoService.dart';
 
 class FeedPage extends StatefulWidget {
   FeedPage({Key key}) : super(key: key);
@@ -60,18 +59,18 @@ class _FeedPageState extends State<FeedPage>
       PostItem(
         profileName: 'annileras',
         avatarUrl:
-        'https://cdn.zeplin.io/5ccffadfbaa9bd34a21c90b5/assets/01E3C2AE-8E06-48E8-A3CA-644729649CDE.png',
+            'https://cdn.zeplin.io/5ccffadfbaa9bd34a21c90b5/assets/01E3C2AE-8E06-48E8-A3CA-644729649CDE.png',
         imageUrl:
-        'https://cdn.zeplin.io/5ccffadfbaa9bd34a21c90b5/assets/A663BE71-D3DD-4C62-AAE0-64198C457A86.png',
+            'https://cdn.zeplin.io/5ccffadfbaa9bd34a21c90b5/assets/A663BE71-D3DD-4C62-AAE0-64198C457A86.png',
         liked: true,
         likeCount: 128,
       ),
       PostItem(
         profileName: 'alexschmit',
         avatarUrl:
-        'https://cdn.zeplin.io/5ccffadfbaa9bd34a21c90b5/assets/01E3C2AE-8E06-48E8-A3CA-644729649CDE.png',
+            'https://cdn.zeplin.io/5ccffadfbaa9bd34a21c90b5/assets/01E3C2AE-8E06-48E8-A3CA-644729649CDE.png',
         imageUrl:
-        'https://cdn.zeplin.io/5ccffadfbaa9bd34a21c90b5/assets/A663BE71-D3DD-4C62-AAE0-64198C457A86.png',
+            'https://cdn.zeplin.io/5ccffadfbaa9bd34a21c90b5/assets/A663BE71-D3DD-4C62-AAE0-64198C457A86.png',
         liked: false,
         likeCount: 109,
       ),
