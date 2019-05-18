@@ -1,12 +1,19 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_workshop/models/NewPost.dart';
 import 'package:flutter_workshop/models/PostItem.dart';
 import 'package:meta/meta.dart';
+import 'package:path/path.dart';
+import 'package:uuid/uuid.dart';
 
 class PhotoService {
   static final instanse = PhotoService._();
+
+  final _storage = FirebaseStorage();
+  final _uuid = Uuid();
+  final _random = Random();
 
   PhotoService._();
 
@@ -19,15 +26,6 @@ class PhotoService {
     //TODO: implement logic
     final ele = _getMockItems();
     return Stream.fromIterable(ele);
-  }
-
-  UploadPhotoTask uploadPhoto(File photo) {
-    //TODO: implement logic
-
-    return UploadPhotoTask(
-      task: null,
-      fileName: '',
-    );
   }
 
   //TODO: remove after Firebase integration.
@@ -54,6 +52,21 @@ class PhotoService {
         ),
       ]
     ];
+  }
+
+  UploadPhotoTask uploadPhoto(File photo) {
+    final fileName = _uuid.v4() + extension(photo.path);
+    final StorageReference ref = _storage.ref().child('photos').child(fileName);
+    final StorageUploadTask uploadTask = ref.putFile(photo);
+
+    uploadTask.events.listen((event) {
+      print(event);
+    });
+
+    return UploadPhotoTask(
+      task: uploadTask,
+      fileName: fileName,
+    );
   }
 }
 
